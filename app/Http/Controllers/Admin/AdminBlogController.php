@@ -52,7 +52,7 @@ class AdminBlogController extends Controller
     public function edit(string $id)
     {
       $blog=Blog::findOrfail($id);
-    return view('admin.blogs.edit',['blog'=>$blog]);
+       return view('admin.blogs.edit',['blog'=>$blog]);
   
     }
 
@@ -61,7 +61,22 @@ class AdminBlogController extends Controller
      */
     public function update(UpdateBlogRequest $request, string $id)
     {
-        
+       $blog= Blog::findOrfail($id);
+      
+      
+       $updateData=$request->validated();
+       dd($updateData);
+
+        //画像を変更する場合
+       if($request->has('image')){
+        //変更前の画像を削除
+        Storage::disk('public')->delete($blog->image);
+        //変更後の画像をアップロード、保存パスをデータにセット
+        $updateData['iamge']=$reqeust->file('image')->store('blogs','public');
+       }
+       $blog->update($updateData);
+       
+    return to_route('admin.blogs.index')->with('success','ブログを更新しました');
     }
 
     /**
