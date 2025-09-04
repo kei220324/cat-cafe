@@ -30,7 +30,7 @@
                        @endif
                     <!-- ▲▲▲▲エラーメッセージ▲▲▲▲　-->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium mb-2" for="title">タイトル</label>
+                        <label class="block text-sm font-medium mb-2" for="title">タイトル</label>  
                         <input id="title" class="block w-full px-4 py-3 mb-2 text-sm bg-white border rounded" type="text" name="title" value="{{ $blog->title}}">
                     </div>
 
@@ -51,12 +51,12 @@
                     <div class="mb-6">
                         <label class="block text-sm font-medium mb-2" for="category">カテゴリ</label>
                         <div class="flex">
-                            <select id="category" class="appearance-none block pl-4 pr-8 py-3 mb-2 text-sm bg-white border rounded" name="">
-                                <option>Option 1</option>
-                                <option>Option 2</option>
-                                <option>Option 3</option>
-                                <option>Option 4</option>
-                            </select>
+                            <select  class="appearance-none block pl-4 pr-8 py-3 mb-2 text-sm bg-white border rounded" name="category_id">
+                          <option value="">選択してください</option>
+                            @foreach($categories as $category)
+                         <option value="{{$category->id}}" @if($category->id==old('category_id',$blog->category_id)) selected @endif> {{$category->name}}</option>
+                            @endforeach
+                        </select>
                             <div class="pointer-events-none transform -translate-x-full flex items-center px-2 text-gray-500">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20">
                                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"></path>
@@ -67,11 +67,13 @@
 
                     <div class="mb-6">
                         <label class="block text-sm font-medium mb-2">登場するねこ</label>
-                        <select id="js-pulldown" class="mr-6 w-full" name="" multiple>
-                            <option selected>Option 1</option>
-                            <option>Option 2</option>
-                            <option selected>Option 3</option>
-                            <option>Option 4</option>
+                        <select id="js-pulldown" class="mr-6 w-full" name="cats[]" multiple>
+                            <option value="">選択してください</option>
+                       @foreach($cats as $cat)
+    <option value="{{ $cat->id }}" @if(in_array($cat->id,old('cats',$blog->cats->pluck('id')->all()))) selected @endif>
+   {{ $cat->name }}
+    </option>
+@endforeach
                         </select>
                     </div>
                 </div>
