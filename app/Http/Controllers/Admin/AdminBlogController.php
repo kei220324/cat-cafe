@@ -10,6 +10,9 @@ use App\Models\Cat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use  App\Models\Category;
+use Illuminate\Support\Facades\Auth;
+
+
 class AdminBlogController extends Controller
 {
     /**
@@ -17,8 +20,10 @@ class AdminBlogController extends Controller
      */
     public function index()
     {
+        
+        $user=Auth::user();
         $blogs=Blog::latest('updated_at')->paginate(10);
-        return view('admin.blogs.index',['blogs'=>$blogs]);
+        return view('admin.blogs.index',['blogs'=>$blogs,'user'=>$user]);
     }
 
     /**
@@ -34,7 +39,7 @@ class AdminBlogController extends Controller
      */
     public function store(StoreBlogRequest $request)
     {
-        $saveImagePath=$request->file('image')->store('blogs','public');
+      $saveImagePath=$request->file('image')->store('blogs','public');
        $blog = new Blog($request->validated());
        $blog->image=$saveImagePath;
         $blog->save();
@@ -53,9 +58,9 @@ class AdminBlogController extends Controller
 //    指定したブログの編集画面 
     public function edit(Blog $blog)
     {
-       $categories=Category::all();
-
-       $cats=Cat::all();
+ 
+        $categories=Category::all();
+        $cats=Cat::all();
        return view('admin.blogs.edit',['blog'=>$blog,'categories'=>$categories ,'cats'=>$cats]);
   
     }
